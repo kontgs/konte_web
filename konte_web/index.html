@@ -13,10 +13,10 @@
         <div class="header-content">
             <h1>KonTE的个人网站</h1>
             <nav>
-                <button class="menu-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <button class="menu-toggle" aria-label="切换菜单">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
                 </button>
                 <ul class="nav-links">
                     <li><a href="#about">关于我</a></li>
@@ -30,7 +30,7 @@
     <main>
         <section class="carousel-container">
             <div class="carousel">
-                <button class="carousel-button prev">&lt;</button>
+                <button class="carousel-button prev" aria-label="上一张图片">&lt;</button>
                 <div class="carousel-track">
                     <div class="carousel-slide">
                         <img src="imgs/001.jpg" alt="PowerBI分析展示" onerror="this.style.background='#ddd'; this.alt='图片加载失败'">
@@ -41,7 +41,7 @@
                         <p class="caption">AIGC应用探索</p>
                     </div>
                 </div>
-                <button class="carousel-button next">&gt;</button>
+                <button class="carousel-button next" aria-label="下一张图片">&gt;</button>
             </div>
         </section>
 
@@ -80,6 +80,14 @@
             <div class="chat-container">
                 <div class="chat-header">
                     <h3>AI助手</h3>
+                    <div class="chat-controls">
+                        <button class="history-button" onclick="toggleHistory()" aria-label="查看历史记录">
+                            <i class="fas fa-history"></i>
+                        </button>
+                        <button class="log-button" onclick="showLogs()" aria-label="查看日志">
+                            <i class="fas fa-list-ul"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="chat-messages">
                     <div class="message bot">
@@ -87,10 +95,22 @@
                     </div>
                 </div>
                 <div class="chat-input">
-                    <input type="text" placeholder="输入消息..." id="messageInput">
-                    <button class="send-message">
-                        <i class="fas fa-paper-plane"></i>
+                    <button class="upload-file" aria-label="上传文件">
+                        <i class="fas fa-paperclip" aria-hidden="true"></i>
                     </button>
+                    <input type="text" placeholder="输入消息..." id="messageInput">
+                    <button class="send-message" aria-label="发送消息">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="history-panel">
+                    <div class="history-header">
+                        <h4>历史记录</h4>
+                        <div class="history-search">
+                            <input type="text" id="historySearch" placeholder="搜索历史记录...">
+                        </div>
+                    </div>
+                    <div class="history-list"></div>
                 </div>
             </div>
         </section>
@@ -98,14 +118,24 @@
 
     <footer>
         <div class="social-links">
-            <a href="#" class="social-icon"><i class="fab fa-bilibili"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
-            <a href="#" class="social-icon xiaohongshu">
-                <svg class="xhs-icon" viewBox="0 0 1024 1024" width="24" height="24">
+            <a href="#" class="social-icon" aria-label="访问我的哔哩哔哩主页">
+                <i class="fab fa-bilibili" aria-hidden="true"></i>
+                <span class="sr-only">哔哩哔哩</span>
+            </a>
+            <a href="#" class="social-icon" aria-label="添加我的微信">
+                <i class="fab fa-weixin" aria-hidden="true"></i>
+                <span class="sr-only">微信</span>
+            </a>
+            <a href="#" class="social-icon" aria-label="访问我的抖音主页">
+                <i class="fab fa-tiktok" aria-hidden="true"></i>
+                <span class="sr-only">抖音</span>
+            </a>
+            <a href="#" class="social-icon xiaohongshu" aria-label="访问我的小红书主页">
+                <svg class="xhs-icon" viewBox="0 0 1024 1024" width="24" height="24" aria-hidden="true">
                     <path fill="#FF2442" d="M512 512m-480 0a480 480 0 1 0 960 0 480 480 0 1 0-960 0Z"/>
                     <path fill="#FFFFFF" d="M750.4 338.8h-478c-16.8 0-30.4 13.6-30.4 30.4v285.6c0 16.8 13.6 30.4 30.4 30.4h478c16.8 0 30.4-13.6 30.4-30.4V369.2c0-16.8-13.6-30.4-30.4-30.4z m-238 285.6h-190V407.2h190v217.2z m196.8 0h-157.6V407.2h157.6v217.2z"/>
                 </svg>
+                <span class="sr-only">小红书</span>
             </a>
         </div>
         <div class="contact-info">
@@ -113,6 +143,7 @@
         </div>
     </footer>
 
+    <script src="logger.js"></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
 </body>

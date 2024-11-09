@@ -316,103 +316,157 @@ footer {
     object-fit: cover;
 }
 
-/* 聊天窗口样式 */
+/* 添加屏幕阅读器专用样式 */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* AI助手样式 */
 .chat-section {
     padding: 4rem 2rem;
-    background: #fff;
+    background: #f8f9fa;
 }
 
 .chat-container {
     max-width: 800px;
     margin: 0 auto;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    height: 600px;
     display: flex;
     flex-direction: column;
-    height: 500px; /* 固定高度 */
 }
 
 .chat-header {
-    padding: 15px;
-    background: #0066cc;
+    background: linear-gradient(135deg, #0066cc, #0052a3);
     color: white;
-    border-radius: 12px 12px 0 0;
+    padding: 1.5rem;
     text-align: center;
+    font-size: 1.2rem;
 }
 
 .chat-header h3 {
     margin: 0;
-    font-size: 1.5rem;
+    font-weight: 500;
 }
 
 .chat-messages {
     flex-grow: 1;
-    padding: 20px;
+    padding: 2rem;
     overflow-y: auto;
+    background: #f8f9fa;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    background: #f8f9fa;
+    gap: 1rem;
 }
 
 .message {
     max-width: 80%;
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin: 5px 0;
+    padding: 1rem 1.5rem;
+    border-radius: 15px;
+    position: relative;
+    animation: messageAppear 0.3s ease-out;
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .message.bot {
     background: #e3f2fd;
     align-self: flex-start;
-    color: #333;
+    border-bottom-left-radius: 5px;
 }
 
 .message.user {
     background: #0066cc;
     color: white;
     align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.message p {
+    margin: 0;
+    line-height: 1.5;
 }
 
 .chat-input {
-    padding: 20px;
+    padding: 1.5rem;
+    background: white;
     border-top: 1px solid #eee;
     display: flex;
-    gap: 10px;
-    background: white;
-    border-radius: 0 0 12px 12px;
+    gap: 1rem;
+    align-items: center;
 }
 
 .chat-input input {
     flex-grow: 1;
-    padding: 12px 20px;
-    border: 1px solid #ddd;
+    padding: 1rem 1.5rem;
+    border: 2px solid #eee;
     border-radius: 25px;
-    outline: none;
     font-size: 1rem;
+    transition: border-color 0.3s;
+    outline: none;
 }
 
 .chat-input input:focus {
     border-color: #0066cc;
 }
 
+.upload-file,
 .send-message {
-    background: #0066cc;
-    color: white;
-    border: none;
-    width: 44px;
-    height: 44px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    cursor: pointer;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-file {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.send-message {
+    background: #0066cc;
+    color: white;
+}
+
+.upload-file:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
 }
 
 .send-message:hover {
     background: #0052a3;
+    transform: translateY(-2px);
+}
+
+.message.thinking {
+    background: #f0f0f0;
+    color: #666;
+    font-style: italic;
 }
 
 /* 响应式调整 */
@@ -422,35 +476,101 @@ footer {
     }
 
     .chat-container {
-        height: 400px;
+        height: 500px;
     }
 
     .message {
         max-width: 90%;
     }
+
+    .chat-input {
+        padding: 1rem;
+    }
+
+    .chat-input input {
+        padding: 0.8rem 1.2rem;
+    }
+
+    .upload-file,
+    .send-message {
+        width: 40px;
+        height: 40px;
+    }
 }
 
-/* 添加文件上传按钮样式 */
-.upload-file {
-    background: #0066cc;
-    color: white;
-    border: none;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    cursor: pointer;
+/* 历史记录面板样式 */
+.history-panel {
+    position: absolute;
+    right: -300px;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: white;
+    border-left: 1px solid #eee;
+    transition: right 0.3s ease;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 5px;
+    flex-direction: column;
 }
 
-.upload-file:hover {
-    background: #0052a3;
+.history-panel.active {
+    right: 0;
 }
 
-/* 修改消息样式以支持文件上传状态 */
-.message.thinking {
-    opacity: 0.7;
-    font-style: italic;
-} 
+.history-header {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.history-search {
+    margin-top: 1rem;
+}
+
+.history-search input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.history-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.history-item {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.history-item:hover {
+    background-color: #f5f5f5;
+}
+
+.history-item .timestamp {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.chat-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.history-button,
+.log-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.history-button:hover,
+.log-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

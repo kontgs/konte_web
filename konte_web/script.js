@@ -17,7 +17,6 @@ const totalSlides = slides.length;
 
 // 设置轮播图片位置
 const setSlidePosition = () => {
-    // 使用translateX来移动轮播图
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
 };
 
@@ -29,24 +28,14 @@ const moveToSlide = (direction) => {
         currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
     }
     setSlidePosition();
-    
-    // 添加调试信息
-    console.log(`Moving to slide ${currentIndex}`);
 };
 
 // 添加按钮事件监听
-nextButton.addEventListener('click', () => {
-    moveToSlide('next');
-    console.log('Next button clicked');
-});
-
-prevButton.addEventListener('click', () => {
-    moveToSlide('prev');
-    console.log('Prev button clicked');
-});
+nextButton.addEventListener('click', () => moveToSlide('next'));
+prevButton.addEventListener('click', () => moveToSlide('prev'));
 
 // 自动播放
-const autoPlayInterval = 5000; // 5秒切换一次
+const autoPlayInterval = 5000;
 let autoPlayTimer = setInterval(() => moveToSlide('next'), autoPlayInterval);
 
 // 当用户与轮播图交互时暂停自动播放，离开后恢复
@@ -62,17 +51,6 @@ carousel.addEventListener('mouseleave', () => {
 // 初始化轮播图位置
 setSlidePosition();
 
-// 添加图片加载完成的检查
-slides.forEach((slide, index) => {
-    const img = slide.querySelector('img');
-    img.addEventListener('load', () => {
-        console.log(`Image ${index + 1} loaded successfully`);
-    });
-    img.addEventListener('error', () => {
-        console.error(`Error loading image ${index + 1}`);
-    });
-});
-
 // 平滑滚动
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -83,83 +61,87 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// 使用config中的值
-const MOONSHOT_API_KEY = config.MOONSHOT_API_KEY;
-const API_BASE_URL = config.API_BASE_URL;
-
-// 聊天功能代码
-const messageInput = document.querySelector('#messageInput');
-const sendButton = document.querySelector('.send-message');
+// AI助手相关代码
 const chatMessages = document.querySelector('.chat-messages');
+const messageInput = document.getElementById('messageInput');
+const sendButton = document.querySelector('.send-message');
+const uploadButton = document.querySelector('.upload-file');
 const fileInput = document.createElement('input');
 fileInput.type = 'file';
 fileInput.style.display = 'none';
-fileInput.accept = '.pdf,.txt,.doc,.docx,.csv';
+fileInput.accept = '.pdf,.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.md,.jpg,.jpeg,.png';
+document.body.appendChild(fileInput);
 
-// 添加文件上传按钮
-const addFileUploadButton = () => {
-    const uploadButton = document.createElement('button');
-    uploadButton.className = 'upload-file';
-    uploadButton.innerHTML = '<i class="fas fa-paperclip"></i>';
-    document.querySelector('.chat-input').insertBefore(uploadButton, sendButton);
-    
-    uploadButton.addEventListener('click', () => fileInput.click());
+// API相关的常量
+const API = {
+    BASE_URL: 'https://api.moonshot.cn/v1',
+    KEY: 'sk-otRWQU3RWi3ywPpRVrpNhQ6wHAAIaNlKiFyTAd1i5hHFnAUQ',
+    HEADERS: {
+        'Authorization': `Bearer sk-otRWQU3RWi3ywPpRVrpNhQ6wHAAIaNlKiFyTAd1i5hHFnAUQ`,
+        'Content-Type': 'application/json'
+    }
 };
 
 // 文件上传处理
-const handleFileUpload = async (file) => {
+async function uploadFile(file) {
     try {
+        logger.log('UPLOAD_START', '开始上传文件', { filename: file.name });
+        
         const formData = new FormData();
         formData.append('file', file);
         formData.append('purpose', 'file-extract');
 
-        const response = await fetch(`${API_BASE_URL}/files`, {
+        const response = await fetch(`${API.BASE_URL}/files`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${MOONSHOT_API_KEY}`
+                'Authorization': API.HEADERS.Authorization
             },
             body: formData
         });
 
-        if (!response.ok) throw new Error('File upload failed');
-        
-        const fileData = await response.json();
-        return fileData.id;
+        if (!response.ok) {
+            throw new Error(`文件上传失败: ${response.status}`);
+        }
+
+        const data = await response.json();
+        logger.log('UPLOAD_SUCCESS', '文件上传成功', data);
+        return data;
     } catch (error) {
-        console.error('Error uploading file:', error);
-        addMessage('文件上传失败，请重试', 'bot');
-        return null;
+        logger.log('UPLOAD_ERROR', '文件上传失败', error);
+        throw error;
     }
-};
+}
 
 // 获取文件内容
-const getFileContent = async (fileId) => {
+async function getFileContent(fileId) {
     try {
-        const response = await fetch(`${API_BASE_URL}/files/${fileId}/content`, {
-            headers: {
-                'Authorization': `Bearer ${MOONSHOT_API_KEY}`
-            }
+        logger.log('CONTENT_FETCH_START', '开始获取文件内容', { fileId });
+        
+        const response = await fetch(`${API.BASE_URL}/files/${fileId}/content`, {
+            headers: API.HEADERS
         });
 
-        if (!response.ok) throw new Error('Failed to get file content');
-        
+        if (!response.ok) {
+            throw new Error(`获取文件内容失败: ${response.status}`);
+        }
+
         const content = await response.text();
+        logger.log('CONTENT_FETCH_SUCCESS', '获取文件内容成功');
         return content;
     } catch (error) {
-        console.error('Error getting file content:', error);
-        return null;
+        logger.log('CONTENT_FETCH_ERROR', '获取文件内容失败', error);
+        throw error;
     }
-};
+}
 
 // 发送消息到API
-const sendMessageToAPI = async (messages) => {
+async function sendMessageToAPI(messages) {
     try {
-        const response = await fetch(`${API_BASE_URL}/chat/completions`, {
+        logger.log('CHAT_REQUEST_START', '开始发送聊天请求', { messages });
+        
+        const response = await fetch(`${API.BASE_URL}/chat/completions`, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${MOONSHOT_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
+            headers: API.HEADERS,
             body: JSON.stringify({
                 model: "moonshot-v1-32k",
                 messages: messages,
@@ -167,83 +149,149 @@ const sendMessageToAPI = async (messages) => {
             })
         });
 
-        if (!response.ok) throw new Error('API request failed');
-        
+        if (!response.ok) {
+            throw new Error(`API请求失败: ${response.status}`);
+        }
+
         const data = await response.json();
+        logger.log('CHAT_REQUEST_SUCCESS', '聊天请求成功', data);
         return data.choices[0].message.content;
     } catch (error) {
-        console.error('Error calling API:', error);
-        return '抱歉，发生了错误，请稍后重试。';
+        logger.log('CHAT_REQUEST_ERROR', '聊天请求失败', error);
+        throw error;
     }
-};
-
-fileInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    addMessage(`正在上传文件: ${file.name}`, 'bot');
-    const fileId = await handleFileUpload(file);
-    
-    if (fileId) {
-        const content = await getFileContent(fileId);
-        if (content) {
-            addMessage('文件上传成功，您可以询问关于文件的问题了', 'bot');
-        }
-    }
-});
-
-// 初始化
-addFileUploadButton();
-
-// 发送消息
-const sendMessage = async () => {
-    const message = messageInput.value.trim();
-    if (!message) return;
-
-    // 添加用户消息到界面
-    addMessage(message, 'user');
-    messageInput.value = '';
-
-    // 准备消息历史
-    const messages = [
-        {
-            role: "system",
-            content: "你是 Kimi，由 Moonshot AI 提供的人工智能助手，你更擅长中文和英文的对话。"
-        },
-        {
-            role: "user",
-            content: message
-        }
-    ];
-
-    // 显示等待状态
-    addMessage('正在思考...', 'bot', 'thinking');
-
-    // 调用API获取回复
-    const response = await sendMessageToAPI(messages);
-    
-    // 移除等待状态的消息
-    const thinkingMessage = document.querySelector('.message.thinking');
-    if (thinkingMessage) thinkingMessage.remove();
-
-    // 添加AI回复
-    addMessage(response, 'bot');
-};
+}
 
 // 添加消息到聊天窗口
-const addMessage = (text, sender, className = '') => {
+function addMessage(text, sender, className = '') {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', sender);
     if (className) messageDiv.classList.add(className);
     messageDiv.innerHTML = `<p>${text}</p>`;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-};
+}
+
+// 处理文件上传事件
+let currentFileContent = null;
+let uploadedFiles = [];
+
+fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+        addMessage(`正在上传文件: ${file.name}...`, 'bot');
+        const fileObject = await uploadFile(file);
+        
+        if (fileObject && fileObject.id) {
+            const content = await getFileContent(fileObject.id);
+            if (content) {
+                uploadedFiles.push({
+                    id: fileObject.id,
+                    name: file.name,
+                    content: content
+                });
+                currentFileContent = content;
+                addMessage('文件上传成功，您可以询问关于文件的问题了', 'bot');
+            }
+        }
+    } catch (error) {
+        addMessage(`文件处理失败: ${error.message}`, 'bot');
+    }
+});
+
+// 发送消息
+async function sendMessage() {
+    const message = messageInput.value.trim();
+    if (!message) return;
+
+    try {
+        addMessage(message, 'user');
+        messageInput.value = '';
+
+        const messages = [
+            {
+                role: "system",
+                content: "你是 Kimi，由 Moonshot AI 提供的人工智能助手..."
+            }
+        ];
+
+        uploadedFiles.forEach(file => {
+            messages.push({
+                role: "system",
+                content: file.content
+            });
+        });
+
+        messages.push({
+            role: "user",
+            content: message
+        });
+
+        addMessage('正在思考...', 'bot', 'thinking');
+
+        const response = await sendMessageToAPI(messages);
+        
+        const thinkingMessage = document.querySelector('.message.thinking');
+        if (thinkingMessage) thinkingMessage.remove();
+
+        addMessage(response, 'bot');
+
+        chatHistory.addChat(message, response, currentFileContent ? {
+            name: uploadedFiles[uploadedFiles.length - 1].name,
+            id: uploadedFiles[uploadedFiles.length - 1].id
+        } : null);
+    } catch (error) {
+        const thinkingMessage = document.querySelector('.message.thinking');
+        if (thinkingMessage) thinkingMessage.remove();
+        addMessage(`发生错误: ${error.message}`, 'bot');
+    }
+}
 
 // 添加发送消息的事件监听
 sendButton.addEventListener('click', sendMessage);
 messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
         sendMessage();
     }
+});
+
+// 添加历史记录面板控制函数
+function toggleHistory() {
+    const historyPanel = document.querySelector('.history-panel');
+    historyPanel.classList.toggle('active');
+    updateHistoryList();
+}
+
+// 更新历史记录列表
+function updateHistoryList(searchKeyword = '') {
+    const historyList = document.querySelector('.history-list');
+    const history = searchKeyword ? 
+        chatHistory.searchHistory(searchKeyword) : 
+        chatHistory.getHistory();
+
+    historyList.innerHTML = history.map(chat => `
+        <div class="history-item" onclick="loadChat('${chat.id}')">
+            <div class="timestamp">${new Date(chat.timestamp).toLocaleString()}</div>
+            <div class="preview">${chat.message.substring(0, 50)}...</div>
+            ${chat.fileInfo ? `<div class="file-info">文件: ${chat.fileInfo.name}</div>` : ''}
+        </div>
+    `).join('');
+}
+
+// 加载历史对话
+function loadChat(chatId) {
+    const chat = chatHistory.history.find(c => c.id === parseInt(chatId));
+    if (chat) {
+        chatMessages.innerHTML = '';
+        addMessage(chat.message, 'user');
+        addMessage(chat.response, 'bot');
+    }
+}
+
+// 添加搜索功能
+document.getElementById('historySearch').addEventListener('input', (e) => {
+    updateHistoryList(e.target.value);
 });
