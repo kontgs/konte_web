@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KonTE的个人网站</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>KonTE的个人网站</h1>
+            <nav>
+                <button class="menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="#about">关于我</a></li>
+                    <li><a href="#portfolio">作品集</a></li>
+                    <li><a href="#contact">联系我</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="carousel-container">
+            <div class="carousel">
+                <button class="carousel-button prev">&lt;</button>
+                <div class="carousel-track">
+                    <div class="carousel-slide">
+                        <img src="imgs/001.jpg" alt="PowerBI分析展示" onerror="this.style.background='#ddd'; this.alt='图片加载失败'">
+                        <p class="caption">PowerBI可视化</p>
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="imgs/002.jpg" alt="AIGC应用" onerror="this.style.background='#ddd'; this.alt='图片加载失败'">
+                        <p class="caption">AIGC应用探索</p>
+                    </div>
+                </div>
+                <button class="carousel-button next">&gt;</button>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="about-container">
+                <div class="profile-header">
+                    <div class="profile-image">
+                        <img src="imgs/my.jpg" alt="KonTE的个人照片">
+                    </div>
+                    <h2>关于我</h2>
+                    <h3 class="name">KonTE</h3>
+                    <p class="title">财务专家</p>
+                </div>
+                
+                <div class="skills-section">
+                    <h3>专业特长</h3>
+                    <ul class="skills-list">
+                        <li>财务分析与报表</li>
+                        <li>预算管理与控制</li>
+                        <li>税务筹划与优化</li>
+                        <li>财务系统管理</li>
+                        <li>PowerBI数据分析</li>
+                        <li>AIGC技术应用</li>
+                    </ul>
+                </div>
+
+                <div class="bio-section">
+                    <h3>自我介绍</h3>
+                    <p>你好，我是KonTE，一名专业的财务工作者。我擅长财务分析和财务管理，致力于为企业提供专业的财务解决方案。</p>
+                    <p>在我的职业生涯中，我积累了丰富的财务管理经验，包括财务报表分析、预算管理、税务筹划等多个领域。作为PowerBI分析师，我善于利用数据可视化工具进行深度财务分析。同时，作为AIGC爱好者，我积极探索AI技术在财务领域创新应用。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="chat" class="chat-section">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>AI助手</h3>
+                </div>
+                <div class="chat-messages">
+                    <div class="message bot">
+                        <p>你好！我是AI助手，有什么可以帮助你的吗？</p>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="输入消息..." id="messageInput">
+                    <button class="send-message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="#" class="social-icon"><i class="fab fa-bilibili"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="social-icon xiaohongshu">
+                <svg class="xhs-icon" viewBox="0 0 1024 1024" width="24" height="24">
+                    <path fill="#FF2442" d="M512 512m-480 0a480 480 0 1 0 960 0 480 480 0 1 0-960 0Z"/>
+                    <path fill="#FFFFFF" d="M750.4 338.8h-478c-16.8 0-30.4 13.6-30.4 30.4v285.6c0 16.8 13.6 30.4 30.4 30.4h478c16.8 0 30.4-13.6 30.4-30.4V369.2c0-16.8-13.6-30.4-30.4-30.4z m-238 285.6h-190V407.2h190v217.2z m196.8 0h-157.6V407.2h157.6v217.2z"/>
+                </svg>
+            </a>
+        </div>
+        <div class="contact-info">
+            <p>联系我：kont_gs@hotmail.com</p>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

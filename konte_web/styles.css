@@ -1,0 +1,456 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+}
+
+/* 头部样式 */
+header {
+    background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+    padding: 1rem;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    color: #333;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #0066cc;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* 轮播图样式 */
+.carousel-container {
+    max-width: 80%;
+    margin: 2rem auto;
+}
+
+.carousel {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f0f0f0;
+}
+
+.carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    flex: 0 0 100%;
+    position: relative;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+    font-size: 20px;
+    transition: background-color 0.3s;
+}
+
+.carousel-button:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+.caption {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+}
+
+/* 底部样式 */
+footer {
+    background: #333;
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.social-links {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+}
+
+.social-icon {
+    color: #999;
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icon.xiaohongshu {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+}
+
+.xhs-icon {
+    transition: transform 0.3s ease;
+    transform: scale(1.2);
+}
+
+.social-icon:hover {
+    color: white;
+    transform: translateY(-2px);
+}
+
+.social-icon.xiaohongshu:hover .xhs-icon {
+    transform: scale(1.3);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #333;
+        margin: 5px 0;
+        transition: 0.3s;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .carousel-container {
+        max-width: 100%;
+    }
+}
+
+/* 在文件末尾添加以下样式 */
+
+.about-section {
+    padding: 4rem 2rem;
+    background: #f9f9f9;
+}
+
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.profile-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.name {
+    font-size: 2rem;
+    color: #0066cc;
+    margin-bottom: 0.5rem;
+}
+
+.title {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.skills-section {
+    margin-bottom: 3rem;
+}
+
+.skills-section h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.skills-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+}
+
+.skills-list li {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.skills-list li:hover {
+    transform: translateY(-3px);
+}
+
+.bio-section {
+    line-height: 1.8;
+}
+
+.bio-section h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.bio-section p {
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .about-section {
+        padding: 2rem 1rem;
+    }
+
+    .profile-header h2 {
+        font-size: 2rem;
+    }
+
+    .name {
+        font-size: 1.5rem;
+    }
+
+    .skills-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 添加个人照片样式 */
+.profile-image {
+    width: 100px;  /* 原来是200px */
+    height: 100px; /* 原来是200px */
+    margin: 0 auto 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 聊天窗口样式 */
+.chat-section {
+    padding: 4rem 2rem;
+    background: #fff;
+}
+
+.chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    height: 500px; /* 固定高度 */
+}
+
+.chat-header {
+    padding: 15px;
+    background: #0066cc;
+    color: white;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #f8f9fa;
+}
+
+.message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 5px 0;
+}
+
+.message.bot {
+    background: #e3f2fd;
+    align-self: flex-start;
+    color: #333;
+}
+
+.message.user {
+    background: #0066cc;
+    color: white;
+    align-self: flex-end;
+}
+
+.chat-input {
+    padding: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+    background: white;
+    border-radius: 0 0 12px 12px;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    font-size: 1rem;
+}
+
+.chat-input input:focus {
+    border-color: #0066cc;
+}
+
+.send-message {
+    background: #0066cc;
+    color: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.send-message:hover {
+    background: #0052a3;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .chat-section {
+        padding: 2rem 1rem;
+    }
+
+    .chat-container {
+        height: 400px;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+}
+
+/* 添加文件上传按钮样式 */
+.upload-file {
+    background: #0066cc;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+}
+
+.upload-file:hover {
+    background: #0052a3;
+}
+
+/* 修改消息样式以支持文件上传状态 */
+.message.thinking {
+    opacity: 0.7;
+    font-style: italic;
+} 
