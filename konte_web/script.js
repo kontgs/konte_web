@@ -78,7 +78,8 @@ const API = {
     KEY: 'sk-otRWQU3RWi3ywPpRVrpNhQ6wHAAIaNlKiFyTAd1i5hHFnAUQ',
     HEADERS: {
         'Authorization': `Bearer sk-otRWQU3RWi3ywPpRVrpNhQ6wHAAIaNlKiFyTAd1i5hHFnAUQ`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
     }
 };
 
@@ -137,8 +138,12 @@ async function getFileContent(fileId) {
 // 发送消息到API
 async function sendMessageToAPI(messages) {
     try {
-        logger.log('CHAT_REQUEST_START', '开始发送聊天请求', { messages });
-        
+        console.log('Attempting to send message to API...', {
+            url: `${API.BASE_URL}/chat/completions`,
+            headers: API.HEADERS,
+            messages: messages
+        });
+
         const response = await fetch(`${API.BASE_URL}/chat/completions`, {
             method: 'POST',
             headers: API.HEADERS,
@@ -146,18 +151,27 @@ async function sendMessageToAPI(messages) {
                 model: "moonshot-v1-32k",
                 messages: messages,
                 temperature: 0.3
-            })
+            }),
+            mode: 'cors'
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+
         if (!response.ok) {
-            throw new Error(`API请求失败: ${response.status}`);
+            const errorText = await response.text();
+            console.error('API Error Response:', errorText);
+            throw new Error(`API request failed: ${response.status} - ${errorText}`);
         }
 
         const data = await response.json();
-        logger.log('CHAT_REQUEST_SUCCESS', '聊天请求成功', data);
+        console.log('API Response:', data);
         return data.choices[0].message.content;
     } catch (error) {
-        logger.log('CHAT_REQUEST_ERROR', '聊天请求失败', error);
+        console.error('Error in sendMessageToAPI:', error);
+        if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+            throw new Error('网络连接失败，请检查您的网络连接或API服务是否可用');
+        }
         throw error;
     }
 }
